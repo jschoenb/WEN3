@@ -29,23 +29,7 @@ export default class Message {
     }
 
     print(userId, parent,contactList) {
-        let username ="";
-
-        if(this.#isGroupMsg && userId !== this.#senderId){
-            username = "<b>"+contactList.get(this.#senderId).name + "</b></br>";
-        }
-        let div = `
-        <div class="message ${userId===this.#senderId?'in':'out'}">
-            <div>
-                <div>
-                    ${username+this.#text}
-                </div>
-                <div class="time">
-                    ${this.#time}
-                </div>
-            </div>
-        </div>`;
-        parent.insertAdjacentHTML("beforeend",div);
+        //TODO
     }
 
 }

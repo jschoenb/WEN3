@@ -26,20 +26,20 @@ export default class WhatsApp {
 
     //================ PRIVATE =================
     #addEventHandler(){
-        document.querySelector("ul.list-group").addEventListener("click",(e) => {
+        document.querySelector(".chatlist").addEventListener("click",(e) => {
             //TODO
         });
 
-        document.querySelector("#inputMsg").onkeyup=(ev)=>{
+        document.querySelector(".composer__send").onclick=(ev)=>{
             //TODO
         };
     }
 
     #initUI(){
-        document.querySelector("#inputMsg").disabled=true;
-        document.querySelector("#headerImg").replaceChildren();
-        document.querySelector(".list-group.border-top").replaceChildren();
-        document.querySelector(".chatroom").replaceChildren();
+        document.querySelector(".composer__input").disabled=true;
+        document.querySelector(".chat__peer").replaceChildren();
+        document.querySelector(".messages").replaceChildren();
+        document.querySelector(".chatlist").replaceChildren();
     }
 
     #loadFromJSON(){
