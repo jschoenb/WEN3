@@ -13,17 +13,10 @@ class Controller {
             //TODO
         });
 
-        const input = document.querySelector("#inputMsg");
-        // input handler
-        input.onblur = () => {
-            //TODO
+        document.querySelector(".composer__send").onclick = (e) => {
+
         };
 
-        input.onkeyup = (ev) => {
-            if (ev.which == 13) {
-                input.blur();
-            }
-        };
     }
 }
 

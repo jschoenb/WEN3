@@ -61,7 +61,7 @@ class WhatsAppModel extends EventTarget {
             console.log(response);
             return response.json();
         }).then(data =>{
-            this.#personalId = data.personalId;
+            this.#personalId = data.userId;
             for (let person of data.persons) {
                 let contact = new Person(person);
                 this.#addMessageToContact(contact,person,false);

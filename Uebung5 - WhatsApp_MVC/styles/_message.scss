@@ -1,0 +1,67 @@
+.msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 70%;
+}
+
+.msg--in {
+    align-self: flex-start;
+}
+
+.msg--out {
+    align-self: flex-end;
+}
+
+.msg__bubble {
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: var(--bubble-in);
+    border: 1px solid var(--border);
+    font-size: 15px;
+    line-height: 1.35;
+}
+
+.msg--out .msg__bubble {
+    background: var(--bubble-out);
+    border-color: transparent;
+}
+
+/* kleine Pfeile */
+.msg--in .msg__bubble {
+    border-top-left-radius: 6px;
+}
+
+.msg--out .msg__bubble {
+    border-top-right-radius: 6px;
+}
+
+.msg__time {
+    font-size: 11px;
+    opacity: .6;
+}
+
+.msg__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    align-self: flex-end;
+}
+
+.msg__status {
+    font-size: 12px;
+    opacity: .85;
+}
+
+.msg--out.is-sent .msg__status {
+    color: #6b7280;
+}
+
+.msg--out.is-delivered .msg__status {
+    color: #6b7280;
+}
+
+.msg--out.is-read .msg__status {
+    color: var(--tick-read);
+    font-weight: 700;
+}
