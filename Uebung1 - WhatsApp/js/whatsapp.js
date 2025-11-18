@@ -27,7 +27,14 @@ export default class WhatsApp {
     //================ PRIVATE =================
     #addEventHandler(){
         document.querySelector(".chatlist").addEventListener("click",(e) => {
-            //TODO
+            let element = e.target.closest('.chatlist__item');
+            if(element){
+                document.querySelector(".messages").replaceChildren();
+                let id = element.dataset.contactId;
+                this.#currentChatPartner = this.#contactList.get(Number(id));
+                this.#currentChatPartner.printMessages(this.#ownId,
+                    document.querySelector(".messages"),this.#contactList);
+            }
         });
 
         document.querySelector(".composer__send").onclick=(ev)=>{
@@ -43,7 +50,34 @@ export default class WhatsApp {
     }
 
     #loadFromJSON(){
-        //TODO
+        fetch("json/contacts.json").then(res=>{
+            return res.json();
+        }).then(data=>{
+            console.log(data);
+            //remaining code
+            this.#ownId=data.userId;
+            for(let jsonPerson of data.persons){
+                let person = new Person(jsonPerson);
+                this.#contactList.set(person.id, person);
+                this.#addMessageToContact(person,jsonPerson,false);
+            }
+            for(let jsonGroup of data.groups){
+                let group = new Group(jsonGroup);
+                this.#contactList.set(group.id, group);
+                this.#addMessageToContact(group,jsonGroup,true);
+                for(let contactId of jsonGroup.members){
+                    if(contactId !== this.#ownId){
+                        let c = this.#contactList.get(contactId);
+                        c.addGroup(group);
+                        group.addContact(c);
+                    }
+                }
+            }
+
+            this.#printContactList();
+        })
+        //const res = await fetch("json/contacts.json");
+        //const data = await res.json();
     }
 
     #printContactList(){

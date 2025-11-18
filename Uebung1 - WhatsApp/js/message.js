@@ -29,7 +29,26 @@ export default class Message {
     }
 
     print(userId, parent,contactList) {
-        //TODO
+        let div;
+        if(userId == this.#senderId) {//own message
+            div = `<div class="msg msg--out is-read">
+                <div class="msg__bubble tw-bubble-out">${this.#text}</div>
+                <div class="msg__meta">
+                    <time class="msg__time">${this.#time}</time>
+                    <span class="msg__status" aria-label="gelesen">✓✓</span>
+                </div>
+            </div>`;
+        } else {
+            let username;
+            if (this.#isGroupMsg) {
+                username = "<b>" + contactList.get(this.#senderId).name + "</b></br>";
+            }
+            div = `<div class="msg msg--in">
+                <div class="msg__bubble tw-bubble-in">
+                    ${username? username:''}${this.#text}</div>
+                <time class="msg__time">${this.#time}</time>
+            </div>`
+        }
+        parent.insertAdjacentHTML('beforeend',div);
     }
-
 }
