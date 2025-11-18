@@ -52,7 +52,7 @@ export default class Contact{
         let text = lastMsg === undefined ? "" : lastMsg.text;
         let time = lastMsg === undefined ? "" : lastMsg.time;
 
-        let html = `<li class="chatlist__item">
+        let html = `<li id="contact_${this.id}" class="chatlist__item">
             <img class="chatlist__avatar" src="${this.#img}" alt="${this.#name}"/>
             <div class="chatlist__meta">
                 <div class="chatlist__name">${this.#name}</div>
@@ -64,7 +64,9 @@ export default class Contact{
     }
 
     printMessages(userId, parent, contactList) {
-        //TODO
+        for(let m of this.#messages){
+            m.print(userId, parent, contactList);
+        }
     }
 }
 

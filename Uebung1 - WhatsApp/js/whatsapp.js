@@ -21,17 +21,50 @@ export default class WhatsApp {
     }
 
     insertMessage(text,senderId,receiverId){
-        //TODO
+        let currentDate = new Date();
+        let options ={
+            hour : "2-digit",
+            minute : "2-digit",
+        }
+        let time = currentDate.toLocaleTimeString("de-de",options);
+        let receiverContact = this.#contactList.get(Number(receiverId));
+        let msg = new Message({text:text,time:time,senderId:senderId},
+            receiverContact instanceof Group);
+        receiverContact.addMessage(msg);
+        msg.print(this.#ownId,document.querySelector(".messages"),this.#contactList);
     }
 
     //================ PRIVATE =================
     #addEventHandler(){
         document.querySelector(".chatlist").addEventListener("click",(e) => {
-            //TODO
+            let element = e.target.closest(".chatlist__item");
+            if(element){
+                let lastActiveContact = document.querySelector(".chatlist__item--active");
+                if(lastActiveContact){
+                    lastActiveContact.classList.remove("chatlist__item--active");
+                }
+                element.classList.add("chatlist__item--active");
+                element.classList.remove("chatlist__item--new");
+                //clear chat window
+                let domMsg = document.querySelector(".messages");
+                domMsg.replaceChildren();
+                //fetch the contact id
+                let id = element.id;
+                let index = id.lastIndexOf("_");
+                id = id.substring(index+1);
+                this.#currentChatPartner = this.#contactList.get(Number(id));
+                this.#currentChatPartner.printMessages(this.#ownId,domMsg,this.#contactList);
+
+                document.querySelector(".composer__input").disabled=false;
+            }
         });
 
         document.querySelector(".composer__send").onclick=(ev)=>{
-            //TODO
+            let input = document.querySelector(".composer__input");
+            if(input.value){
+                this.insertMessage(input.value,this.#ownId,this.#currentChatPartner.id);
+                input.value = "";
+            }
         };
     }
 
@@ -53,6 +86,21 @@ export default class WhatsApp {
                 this.#contactList.set(person.id, person);
                 this.#addMessageToContact(person,jsonPerson,false);
             }
+            for(let jsonGroup of data.groups){
+                let group = new Group(jsonGroup);
+                this.#contactList.set(group.id, group);
+                this.#addMessageToContact(group,jsonGroup,true);
+                for(let contactId of jsonGroup.members){
+                    if(contactId !== this.#ownId){
+                        let c = this.#contactList.get(contactId);
+                        if(c){
+                            group.addContact(c);
+                            c.addGroup(group);
+                        }
+                    }
+                }
+            }
+
             this.#printContactList();
         })
     }
