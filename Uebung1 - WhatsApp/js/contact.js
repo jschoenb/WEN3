@@ -41,10 +41,29 @@ export default class Contact{
     }
 
     printContact () {
-        //TODO
+
+        let lastMsg = this.#messages[this.#messages.length - 1];
+        /*let text;
+        if(lastMsg=== undefined){
+            text = "";
+        } else {
+            text = lastMsg.text;
+        }*/
+        let text = lastMsg === undefined ? "" : lastMsg.text;
+        let time = lastMsg === undefined ? "" : lastMsg.time;
+
+        let html = `<li class="chatlist__item">
+            <img class="chatlist__avatar" src="${this.#img}" alt="${this.#name}"/>
+            <div class="chatlist__meta">
+                <div class="chatlist__name">${this.#name}</div>
+                <div class="chatlist__last">${text}</div>
+            </div>
+            <time class="chatlist__time">${time}</time>
+        </li>`;
+        document.querySelector(".chatlist").insertAdjacentHTML("afterbegin", html);
     }
 
-    printMessages(userId,parent,contactList){
+    printMessages(userId, parent, contactList) {
         //TODO
     }
 }

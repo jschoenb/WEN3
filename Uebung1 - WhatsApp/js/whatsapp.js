@@ -43,7 +43,18 @@ export default class WhatsApp {
     }
 
     #loadFromJSON(){
-        //TODO
+        fetch("json/contacts.json").then(
+            res=>res.json()
+        ).then(data=>{
+            console.log(data);
+            this.#ownId = data.userId;
+            for(let jsonPerson of data.persons){
+                let person = new Person(jsonPerson);
+                this.#contactList.set(person.id, person);
+                this.#addMessageToContact(person,jsonPerson,false);
+            }
+            this.#printContactList();
+        })
     }
 
     #printContactList(){
