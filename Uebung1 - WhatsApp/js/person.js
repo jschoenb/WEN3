@@ -36,6 +36,6 @@ export default class Person extends Contact {
      * @returns {string}
      */
     doPrintHeader(){
-        //TODO
+        return  `zuletzt online ${this.#online}`;
     }
 }

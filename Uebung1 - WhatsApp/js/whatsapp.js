@@ -33,8 +33,10 @@ export default class WhatsApp {
         receiverContact.addMessage(msg);
         if(this.#currentChatPartner && this.#currentChatPartner.id == receiverId){
             msg.print(this.#ownId,document.querySelector(".messages"),this.#contactList);
+        } else {
+            let contactElement = document.querySelector(`[data-contact-id="${receiverId}"]`);
+            contactElement.classList.add("chatlist__item--new");
         }
-
     }
 
     //================ PRIVATE =================
@@ -55,7 +57,7 @@ export default class WhatsApp {
                 let id = element.dataset.contactId;
                 this.#currentChatPartner = this.#contactList.get(Number(id));
                 this.#currentChatPartner.printMessages(this.#ownId,domMsg,this.#contactList);
-
+                this.#currentChatPartner.printHeader();
                 document.querySelector(".composer__input").disabled=false;
             }
         });
