@@ -363,4 +363,8 @@ body.app {
   border-radius: 999px;
 }
 
+.chatlist__item--new {
+  background-color: #7fba8e;
+}
+
 /*# sourceMappingURL=main.css.map */

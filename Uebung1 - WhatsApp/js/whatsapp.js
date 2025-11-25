@@ -21,7 +21,27 @@ export default class WhatsApp {
     }
 
     insertMessage(text,senderId,receiverId){
-        //TODO
+        let currentDate = new Date();
+        let options = {
+            hour: "2-digit",
+            minute: "2-digit"
+        };
+        let time = currentDate.toLocaleTimeString("de-de",options);
+        let receiverContact = this.#contactList.get(Number(receiverId));
+        let obj={
+            text:text,
+            time:time,
+            senderId:senderId,
+        }
+        let msg = new Message(obj, receiverContact instanceof Group);
+        receiverContact.addMessage(msg);
+        if(this.#currentChatPartner && this.#currentChatPartner.id === receiverId) {
+            msg.print(this.#ownId,document.querySelector(".messages"),this.#contactList);
+        } else {
+            let contactElement = document.querySelector(
+                `[data-contact-id="${receiverId}"]`);
+            contactElement.classList.add("chatlist__item--new");
+        }
     }
 
     //================ PRIVATE =================
@@ -29,16 +49,30 @@ export default class WhatsApp {
         document.querySelector(".chatlist").addEventListener("click",(e) => {
             let element = e.target.closest('.chatlist__item');
             if(element){
+                let lastActiveContact = document.querySelector(".chatlist__item--active");
+                if(lastActiveContact){
+                    lastActiveContact.classList.remove("chatlist__item--active");
+                }
+                element.classList.add("chatlist__item--active");
+                element.classList.remove("chatlist__item--new");
+
                 document.querySelector(".messages").replaceChildren();
                 let id = element.dataset.contactId;
                 this.#currentChatPartner = this.#contactList.get(Number(id));
                 this.#currentChatPartner.printMessages(this.#ownId,
                     document.querySelector(".messages"),this.#contactList);
+                //enable input field
+                document.querySelector(".composer__input").disabled = false;
+                this.#currentChatPartner.printHeader();
             }
         });
 
         document.querySelector(".composer__send").onclick=(ev)=>{
-            //TODO
+            let input = document.querySelector(".composer__input");
+            if(input.value){
+                this.insertMessage(input.value,this.#ownId,this.#currentChatPartner.id);
+                input.value = "";
+            }
         };
     }
 

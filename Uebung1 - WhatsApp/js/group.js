@@ -13,6 +13,6 @@ export default class Group extends Contact {
     }
 
     doPrintHeader(){
-        //TODO
+        return this.#contacts.map(c=>c.name).join(", ");
     }
 }
