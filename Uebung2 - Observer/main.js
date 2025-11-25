@@ -5,11 +5,19 @@
 //Tests
 //=================================================
 
-import Person from './person.js';
+
 import Newsletter from "./newsletter.js";
 
 window.onload = function(){
+    let newsletter = new Newsletter();
 
+    newsletter.addEventListener("sendLetter",(e)=>{
+       console.log(e);
+       let div = document.querySelector("#eventDiv");
+       div.innerHTML += `<p>${e.detail.message}</p>`;
+    });
+
+    newsletter.send("Fröhliche Weihnachten!");
 }
 
 
