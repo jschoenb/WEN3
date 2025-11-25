@@ -31,7 +31,10 @@ export default class WhatsApp {
         let msg = new Message({text:text,time:time,senderId:senderId},
             receiverContact instanceof Group);
         receiverContact.addMessage(msg);
-        msg.print(this.#ownId,document.querySelector(".messages"),this.#contactList);
+        if(this.#currentChatPartner && this.#currentChatPartner.id == receiverId){
+            msg.print(this.#ownId,document.querySelector(".messages"),this.#contactList);
+        }
+
     }
 
     //================ PRIVATE =================
@@ -49,9 +52,7 @@ export default class WhatsApp {
                 let domMsg = document.querySelector(".messages");
                 domMsg.replaceChildren();
                 //fetch the contact id
-                let id = element.id;
-                let index = id.lastIndexOf("_");
-                id = id.substring(index+1);
+                let id = element.dataset.contactId;
                 this.#currentChatPartner = this.#contactList.get(Number(id));
                 this.#currentChatPartner.printMessages(this.#ownId,domMsg,this.#contactList);
 

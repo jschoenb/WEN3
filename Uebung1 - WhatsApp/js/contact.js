@@ -52,7 +52,7 @@ export default class Contact{
         let text = lastMsg === undefined ? "" : lastMsg.text;
         let time = lastMsg === undefined ? "" : lastMsg.time;
 
-        let html = `<li id="contact_${this.id}" class="chatlist__item">
+        let html = `<li class="chatlist__item" data-contact-id="${this.id}">
             <img class="chatlist__avatar" src="${this.#img}" alt="${this.#name}"/>
             <div class="chatlist__meta">
                 <div class="chatlist__name">${this.#name}</div>
