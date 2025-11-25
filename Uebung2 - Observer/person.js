@@ -4,10 +4,16 @@ export default class Person{
     constructor(firstName, lastName) {
         this.#firstName = firstName;
         this.#lastName = lastName;
+        this.cb = null;
     }
 
     register(newsletter) {
-        //TODO: register this person to the newsletter
+        this.cb = (event) => this.#receivedMessage(event)
+        newsletter.addEventListener("sendLetter", this.cb);
+    }
+
+    deregister(newsletter) {
+        newsletter.removeEventListener("sendLetter", this.cb);
     }
 
     #receivedMessage(customEvent) {
