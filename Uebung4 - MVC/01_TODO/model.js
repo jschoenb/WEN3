@@ -11,7 +11,15 @@ class ToDoModel extends EventTarget {
     }
 
     add(title,description) {
-        //TODO
+        let task = {
+            id : ++ToDoModel.id,
+            title : title,
+            description : description,
+            complete : false
+        }
+        this.todoList.set(task.id, task);
+        let event = new CustomEvent("addTask",{detail:{task:task}});
+        this.dispatchEvent(event);
     }
 
     remove(taskId) {
