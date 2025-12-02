@@ -7,6 +7,7 @@
 
 
 import Newsletter from "./newsletter.js";
+import Person from "./person.js";
 
 window.onload = function(){
     let newsletter = new Newsletter();
@@ -17,7 +18,12 @@ window.onload = function(){
        div.innerHTML += `<p>${e.detail.message}</p>`;
     });
 
+    let person1 = new Person("Hannes","Schönböck");
+    person1.register(newsletter);
+
     newsletter.send("Fröhliche Weihnachten!");
+    person1.deregister(newsletter);
+    newsletter.send("Zweite Nachricht");
 }
 
 

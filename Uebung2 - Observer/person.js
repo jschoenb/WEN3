@@ -1,13 +1,22 @@
 export default class Person{
     #firstName;
     #lastName;
+    #cb;
+
     constructor(firstName, lastName) {
         this.#firstName = firstName;
         this.#lastName = lastName;
     }
 
     register(newsletter) {
-        //TODO: register this person to the newsletter
+        this.#cb =  (ev)=>{
+            this.#receivedMessage(ev);
+        }
+        newsletter.addEventListener("sendLetter",this.#cb)
+    }
+
+    deregister(newsletter) {
+        newsletter.removeEventListener("sendLetter",this.#cb)
     }
 
     #receivedMessage(customEvent) {

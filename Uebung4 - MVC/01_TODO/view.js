@@ -1,17 +1,37 @@
 import {todoModelInstance} from "./model.js";
 
 class TodoItem extends HTMLElement {
-    //TODO private task property
-
+    #task;
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
     }
 
+    get task() {
+        return this.#task;
+    }
+
+    set task(task) {
+        this.#task = task;
+        this.render();
+    }
     //TODO getter and setter for task property
 
     render() {
-        //TODO render the task in the shadow DOM
+        this.shadowRoot.innerHTML = `
+            <style>
+              li { display: flex; justify-content: space-between; align-items: center; padding: 0.5em 0; }
+              span.completed { text-decoration: line-through; color: grey; }
+              button { margin-left: 1em; }
+            </style>
+            <li>
+            <button id="update">${this.#task.complete ? 'Open' : 'Close'}</button>
+            <span class="${this.#task.complete ? 'completed' : ''}">
+                                ${this.#task.title}: ${this.#task.description}
+            </span>
+            <button id="delete">Delete</button>
+            </li>
+        `;
 
         //TODO click handler for update
 
@@ -29,15 +49,27 @@ class TodoList extends HTMLElement {
 
     connectedCallback() {
         this.render();
-        //TODO register event listeners for the model
+        todoModelInstance.addEventListener("addTask",
+            (e)=>{
+                this.addTask(e.detail.task);
+            })
     }
 
     render() {
-        //TODO render the list in the shadow DOM
+        this.shadowRoot.innerHTML = `<ul id="list"></ul>`;
+        const list = this.shadowRoot.querySelector("#list");
+        for(const [,task] of todoModelInstance.getList()){
+            const item = document.createElement("todo-item");
+            item.task = task;
+            list.appendChild(item);
+        }
     }
 
     addTask(task) {
-        //TODO
+        console.log(task);
+        const item = document.createElement("todo-item");
+        item.task = task;
+        this.shadowRoot.querySelector("#list").appendChild(item);
     }
 
     removeTask(taskId) {

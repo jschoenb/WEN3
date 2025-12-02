@@ -14,8 +14,16 @@ class TodoController {
     init(){
         // input handler
         this.#dom.submit.onclick=(ev) => {
-            //TODO:
-            return false;
+            ev.preventDefault();
+            let title = this.#dom.title.value;
+            let description = this.#dom.description.value;
+            if(title && description){
+                todoModelInstance.add(title, description);
+                this.#dom.title.value = "";
+                this.#dom.description.value = "";
+            } else {
+                alert("Bitte einen Titel und Beschreibung eingeben!");
+            }
         };
 
         //TODO: add event listener for deleting a task
