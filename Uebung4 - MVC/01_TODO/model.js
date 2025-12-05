@@ -24,11 +24,24 @@ class ToDoModel extends EventTarget {
     }
 
     remove(taskId) {
-        //TODO
+        let task = this.todoList.get(Number(taskId));
+        this.todoList.delete(Number(taskId));
+        let event = new CustomEvent("deleteTask",{
+            detail: {task: task.id}
+        })
+        this.dispatchEvent(event);
     }
 
-    complete(taskId, isComplete) {
-        //TODO
+    complete(taskId) {
+        let entry = this.todoList.get(Number(taskId));
+        if(entry){
+            entry.complete = !entry.complete;
+            console.log(this.todoList.get(Number(taskId)));
+            let event = new CustomEvent("updateTask",{
+                detail: entry
+            })
+            this.dispatchEvent(event);
+        }
     }
 }
 
