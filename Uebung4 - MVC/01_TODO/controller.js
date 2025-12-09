@@ -27,8 +27,16 @@ class TodoController {
         };
 
         //TODO: add event listener for deleting a task
+        this.#dom.list.addEventListener("delete-task",(ev) => {
+            console.log(`Task ${ev.detail} should be deleted`);
+            todoModelInstance.remove(ev.detail);
+        })
 
         //TODO: add event listener for completing a task
+        this.#dom.list.addEventListener("update-task",(ev) => {
+            console.log(`Task ${ev.detail} should be updated`);
+            todoModelInstance.complete(ev.detail);
+        })
     }
 }
 

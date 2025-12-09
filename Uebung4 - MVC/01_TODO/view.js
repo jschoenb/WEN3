@@ -35,8 +35,21 @@ class TodoItem extends HTMLElement {
         `;
 
         //TODO click handler for update
-
+        this.shadowRoot.querySelector("#update").onclick = (e) => {
+            this.dispatchEvent(new CustomEvent('update-task',{
+                detail: this.#task.id,
+                bubbles: true,
+                composed: true,
+            }));
+        }
         //TODO click handler for delete
+        this.shadowRoot.querySelector("#delete").onclick = (e) => {
+            this.dispatchEvent(new CustomEvent('delete-task',{
+                detail: this.#task.id,
+                bubbles: true,
+                composed: true,
+            }));
+        }
     }
 }
 customElements.define('todo-item', TodoItem);
@@ -52,6 +65,15 @@ class TodoList extends HTMLElement {
         this.render();
         todoModelInstance.addEventListener("addTask",
             (e)=>this.addTask(e.detail.task));
+        todoModelInstance.addEventListener("deleteTask",
+            (e)=>{
+                console.log(`Task ${e.detail} is ready to be deleted in the view`);
+                this.removeTask(e.detail);
+            });
+        todoModelInstance.addEventListener("updateTask",
+            (e)=>{
+                this.updateTask(e.detail);
+            });
     }
 
     render() {
@@ -72,11 +94,24 @@ class TodoList extends HTMLElement {
     }
 
     removeTask(taskId) {
-        //TODO
+        const items = this.shadowRoot.querySelectorAll('todo-item');
+        for(const currentItem of items) {
+            if(currentItem.task.id === taskId) {
+                currentItem.remove();
+                break;
+            }
+        }
     }
 
     updateTask(updatedTask) {
-        //TODO
+        console.log("Should update Task ",updatedTask);
+        const items = this.shadowRoot.querySelectorAll('todo-item');
+        for(const currentItem of items) {
+            if(currentItem.task.id === updatedTask.id) {
+                currentItem.task = updatedTask;
+                break;
+            }
+        }
     }
 }
 customElements.define('todo-list', TodoList);
