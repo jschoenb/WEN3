@@ -20,7 +20,9 @@ class WhatsAppModel extends EventTarget {
     }
 
     addContact(contact){
-        //TODO
+        this.#contactList.set(contact.id, contact);
+        let event = new CustomEvent('addContact',{detail:contact});
+        this.dispatchEvent(event);
     }
 
     getContactById(contactId){
@@ -54,13 +56,19 @@ class WhatsAppModel extends EventTarget {
         let msg = new Message(obj,receiverContact instanceof Group);
         receiverContact.addMessage(msg);
         //TODO throw the event to update the view
+        let event = new CustomEvent('newMessage',
+            {detail:{currentChatPartner:this.#currentChatPartner,receiver: receiverContact.id,
+                msg:msg,userId:this.#personalId}});
+        this.dispatchEvent(event);
     }
 
     #loadFromJSON(){
+        console.log("Loading data from JSON");
         fetch("json/contacts.json").then((response) => {
             console.log(response);
             return response.json();
         }).then(data =>{
+            console.log("Adding persons/groups");
             this.#personalId = data.userId;
             for (let person of data.persons) {
                 let contact = new Person(person);
