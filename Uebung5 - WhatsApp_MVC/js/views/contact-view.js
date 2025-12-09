@@ -33,7 +33,13 @@ class ContactItem extends HTMLElement {
         </li>`;
         this.shadowRoot.innerHTML = html;
 
-        //TODO handle a click on the contact item -> thrwo change-contact event with the contact id
+        this.shadowRoot.querySelector("li").onclick = (e) => {
+            this.dispatchEvent(new CustomEvent('change-contact',{
+                detail: this.#contact.id,
+                bubbles: true,
+                composed: true,
+            }));
+        }
     }
 }
 customElements.define('contact-item', ContactItem);

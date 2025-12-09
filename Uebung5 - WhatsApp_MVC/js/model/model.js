@@ -56,6 +56,8 @@ class WhatsAppModel extends EventTarget {
         let msg = new Message(obj,receiverContact instanceof Group);
         receiverContact.addMessage(msg);
         //TODO throw the event to update the view
+        let event = new CustomEvent('newMessage', {detail:msg});
+        this.dispatchEvent(event);
     }
 
     #loadFromJSON(){
