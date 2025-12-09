@@ -20,7 +20,9 @@ class WhatsAppModel extends EventTarget {
     }
 
     addContact(contact){
-        //TODO
+        this.#contactList.set(contact.id, contact);
+        let event = new CustomEvent('addContact', {detail:contact});
+        this.dispatchEvent(event);
     }
 
     getContactById(contactId){
