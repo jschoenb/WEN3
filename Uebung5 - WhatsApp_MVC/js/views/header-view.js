@@ -17,22 +17,30 @@ class HeaderView extends HTMLElement{
     }
 
     render() {
-        //TODO
-        /* Use the following code for the template
+        if(this.#contact){
+            let text;
+            if(this.#contact instanceof Person){
+                text = `zuletzt online ${this.#contact.online}`;
+            } else {
+                text = this.#contact.contacts.map(contact => contact.name).join(", ");
+            }
+            this.shadowRoot.innerHTML = `
         <link rel="stylesheet" href="./styles/main.css">
         <header class="chat__header">
         <div class="chat__peer">
-          <img class="chat__avatar" src="img/contacts/anna.jpeg" alt="Anna" />
+          <img class="chat__avatar" src="${this.#contact.img}" alt="${this.#contact.name}" />
           <div>
-            <div class="chat__name">Anna</div>
-            <div class="chat__status">online</div>
+            <div class="chat__name">${this.#contact.name}</div>
+            <div class="chat__status">${text}</div>
           </div>
         </div>
         <div class="chat__actions">
           <button class="icon-btn" aria-label="Suchen">🔎</button>
           <button class="icon-btn" aria-label="Mehr">⋯</button>
         </div>
-      </header>*/
+      </header>`
+        }
+
     }
 }
 customElements.define('header-view', HeaderView);

@@ -15,8 +15,8 @@ class Controller {
             const contact = model.changeContact(e.detail.id);
             const messageList = document.querySelector("message-list");
             messageList.contact = contact;
-            //contact im model setzen
-            //Nachrichtenliste neuen Contact setzen
+            const header = document.querySelector("header-view");
+            header.contact = contact;
         });
 
         document.querySelector(".composer__send").onclick = (e) => {
