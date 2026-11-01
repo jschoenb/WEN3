@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Components: Templates sinnvoll nutzen</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!--
+    defer: Die Skripte laden parallel, laufen aber erst nach dem Parsen des HTML,
+    und zwar in der angegebenen Reihenfolge. Das <template> existiert dann garantiert.
+  -->
+  <script src="profile-card.js" defer></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+  <h1>Web Components mit &lt;template&gt;</h1>
+
+  <!--
+    Das Template: Struktur und Komponenten-CSS stehen zusammen an einem Ort.
+    - Der Inhalt wird geparst, aber nicht gerendert oder ausgeführt.
+    - profile-card.js klont ihn für jede Instanz.
+  -->
+  <template id="profile-card-template">
+    <style>
+    </style>
+  </template>
+
+  <!-- Die Komponente wird wie ein normales HTML-Element benutzt -->
+  <section id="team">
+    <profile-card name="Ada Lovelace" role="Mathematikerin">
+      <p>Schrieb das erste Programm für Charles Babbages Analytical Engine.</p>
+    </profile-card>
+
+    <profile-card name="Alan Turing" role="Informatiker">
+      <p>Formalisierte den Begriff des Algorithmus mit der Turingmaschine.</p>
+    </profile-card>
+
+    <!-- Ohne Inhalt: der Fallback-Text des Slots wird angezeigt -->
+    <profile-card name="Grace Hopper" role="Informatikerin"></profile-card>
+  </section>
+
+  <button id="add">Neue Karte hinzufügen</button>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+/* Seiten-CSS: wirkt nur auf das normale DOM, nicht im Shadow DOM der Komponente */
+:root {
+  color-scheme: light dark;
+  /* Custom Properties durchdringen das Shadow DOM -> Styling-Schnittstelle der Komponente */
+  --card-accent: #2a6f97;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  line-height: 1.5;
+}
+
+#team {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+button {
+  font: inherit;
+  padding: .5rem 1rem;
+  cursor: pointer;
+}
