@@ -1,27 +1,28 @@
-import {todoModelInstance} from "./model.js";
+import { todoModelInstance } from './model.js';
 
-class TodoController {
-    #dom
-    constructor(){
-        this.#dom = {
-            title: document.querySelector('#todo-title'),
-            description: document.querySelector('#todo-description'),
-            submit: document.querySelector('#todo-submit'),
-            list: document.querySelector('todo-list')
-        }
+/**
+ * Controller: verbindet Eingaben (Formular, Events der Komponenten) mit dem Model.
+ * Die View wird durch das Model aktualisiert, nicht direkt vom Controller.
+ */
+export class TodoController {
+  #model;
+
+  constructor(model = todoModelInstance) {
+    this.#model = model;
+  }
+
+  init() {
+    const form = document.querySelector('#todo-form');
+    const title = document.querySelector('#todo-title');
+    const description = document.querySelector('#todo-description');
+    const list = document.querySelector('todo-list');
+
+    if (list) {
+      //TODO: Model mit der View verbinden
     }
 
-    init(){
-        // input handler
-        this.#dom.submit.onclick=(ev) => {
-            //TODO:
-            return false;
-        };
-
-        //TODO: add event listener for deleting a task
-
-        //TODO: add event listener for completing a task
-    }
+    form?.addEventListener('submit', (e) => {
+      //TODO
+    });
+  }
 }
-
-export const controllerInstance = new TodoController();

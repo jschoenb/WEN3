@@ -1,31 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ToDo List</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <form>
-        <div class="form-group">
-            <label for="todo-title">Title of TODO Item: </label>
-            <input id="todo-title" class="form-control" placeholder="What needs to be done"/>
-        </div>
-        <div class="form-group">
-            <label for="todo-description">Description</label>
-            <textarea id="todo-description" class="form-control" placeholder="Give some description..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary" id="todo-submit">Submit</button>
+  <main class="app">
+    <header class="app-header">
+      <h1>Todo</h1>
+      <p>MVC with Web Components. Saved in your browser.</p>
+    </header>
+
+    <form id="todo-form" class="card">
+      <label for="todo-title">Title</label>
+      <input id="todo-title" placeholder="What needs to be done?" required autocomplete="off">
+
+      <label for="todo-description">Description <span class="optional">optional</span></label>
+      <textarea id="todo-description" rows="2" placeholder="Add some detail..."></textarea>
+
+      <button type="submit" class="btn">Add task</button>
     </form>
 
-    <!-- TODO add custom component for todo list -->
+    <todo-list></todo-list>
+  </main>
 
-    <script type="module" src="view.js"></script>
-    <script type="module" src="main.js"></script>
+  <!--
+    TEMPLATES: Struktur + Komponenten-CSS je Komponente. Sie müssen im DOM stehen,
+    bevor view.js die Komponenten benutzt (Module laufen erst nach dem Parsen).
+    Farben kommen als CSS-Variablen aus styles.css, die dringen ins Shadow DOM durch.
+  -->
+  <template id="todo-item-template">
+    <style>
+      :host { display: block; }
+      .item {
+        display: flex; align-items: flex-start; gap: .8rem;
+        padding: .85rem 1rem; margin-bottom: .6rem;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        transition: opacity .2s;
+      }
+      .item.done { opacity: .6; }
+      .check {
+        appearance: none; flex: none; margin: .1rem 0 0; cursor: pointer;
+        width: 1.4rem; height: 1.4rem; border: 2px solid var(--muted); border-radius: 50%;
+        display: grid; place-content: center;
+        transition: background .15s, border-color .15s;
+      }
+      .check::after {
+        content: ""; width: .35rem; height: .7rem; margin-top: -.1rem;
+        border: solid var(--accent-ink); border-width: 0 2px 2px 0;
+        transform: rotate(45deg) scale(0); transition: transform .15s;
+      }
+      .check:checked { background: var(--accent); border-color: var(--accent); }
+      .check:checked::after { transform: rotate(45deg) scale(1); }
+      .check:focus-visible, .delete:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .body { flex: 1; min-width: 0; display: grid; cursor: pointer; overflow-wrap: anywhere; }
+      .title { font-weight: 600; }
+      .description { color: var(--muted); font-size: .92rem; white-space: pre-wrap; }
+      .done .title, .done .description { text-decoration: line-through; }
+      .delete {
+        flex: none; border: 0; background: none; cursor: pointer; border-radius: 6px;
+        padding: 0 .5rem; font-size: 1.4rem; line-height: 1.5; color: var(--muted);
+      }
+      .delete:hover { color: var(--danger); }
+    </style>
+    <!--TODO-->
+  </template>
+
+  <template id="todo-list-template">
+    <style>
+      :host { display: block; margin-top: 1.75rem; }
+      .empty {
+        margin: 0; padding: 2rem 1rem; text-align: center; color: var(--muted);
+        border: 1px dashed var(--line); border-radius: var(--radius);
+      }
+    </style>
+    <!--TODO-->
+  </template>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>
-
-
-

@@ -1,68 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Literature List</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <main class="app">
+    <header class="section-head">
+      <h1>Projects</h1>
+      <button type="button" class="btn" id="open-dialog">Add project</button>
+    </header>
+    <project-list></project-list>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-    Hinzufügen
-</button>
+    <header class="section-head">
+      <h2>Team</h2>
+    </header>
+    <employee-list></employee-list>
+  </main>
 
-<div class="modal" tabindex="-1" role="dialog" id="exampleModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="title">Titel: </label>
-                        <input type="text" class="form-control" placeholder="Enter title" id="title">
-                    </div>
-                    <div class="form-group">
-                        <label for="budget">Budget: </label>
-                        <input type="number" class="form-control" id="budget">
-                    </div>
-                    <div class="form-group">
-                        <label for="desc">Description: </label>
-                        <input type="text" class="form-control" id="desc">
-                    </div>
-                    <div class="form-group">
-                        <label for="employees">Employees: </label>
-                        <!-- would dynamically render all employees -->
-                        <select id="employees" multiple class="form-control">
-                            <option value="1">Hans Huber</option>
-                            <option value="2">Susi Musterfrau</option>
-                            <option value="3">Max Mustermann</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+  <!-- Natives <dialog> statt Bootstrap-Modal: kein Framework-JS nötig -->
+  <dialog id="project-dialog" aria-labelledby="dialog-title">
+    <form id="project-form">
+      <h2 id="dialog-title">New project</h2>
 
-<!-- Project List Component -->
-<hr/>
-<!-- Employee List Component -->
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required autocomplete="off">
 
+      <label for="budget">Budget</label>
+      <input type="number" id="budget" name="budget" min="0" step="any" required>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
-<script type="module" src="main.js"></script>
-<script type="module" src="project-view.js"></script>
-<script type="module" src="employee-view.js"></script>
+      <label for="description">Description <span class="optional">optional</span></label>
+      <textarea id="description" name="description" rows="2"></textarea>
+
+      <fieldset class="options">
+        <legend>Employees</legend>
+        <div id="employee-options"></div>
+      </fieldset>
+      <p class="error" id="form-error" role="alert" hidden>Please fill in all fields and select at least one employee.</p>
+
+      <div class="actions">
+        <button type="submit" class="btn">Save</button>
+        <button type="button" class="btn btn-quiet" id="cancel">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!--
+    TEMPLATES. Zwei Arten:
+    1) Shadow-DOM-Templates der Komponenten (mit eigenem <style>)
+    2) employee-option-template: wird im normalen DOM geklont (Checkbox im Formular)
+    Farben kommen als CSS-Variablen aus styles.css.
+  -->
+  <template id="employee-option-template">
+    <label class="check-option">
+      <input type="checkbox" name="employee">
+      <span></span>
+    </label>
+  </template>
+
+  <template id="project-item-template">
+    <style>
+      :host { display: block; }
+      .item {
+        display: grid; grid-template-columns: 1fr auto; gap: .25rem 1rem;
+        padding: 1rem 1.1rem; margin-bottom: .7rem;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      }
+      .title { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+      .budget { color: var(--muted); font-size: .9rem; font-variant-numeric: tabular-nums; }
+      .description { grid-column: 1 / -1; margin: .2rem 0 0; color: var(--muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+      .people { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0 0; padding: 0; list-style: none; }
+      .people li { padding: .15rem .7rem; border-radius: 999px; background: var(--chip); font-size: .85rem; }
+      .delete {
+        align-self: start; border: 0; background: none; cursor: pointer; border-radius: 6px;
+        padding: 0 .5rem; font-size: 1.4rem; line-height: 1.5; color: var(--muted);
+      }
+      .delete:hover { color: var(--danger); }
+      .delete:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    </style>
+    <!--TODO -->
+  </template>
+
+  <template id="project-list-template">
+    <style>
+      :host { display: block; }
+      .empty {
+        margin: 0; padding: 2rem 1rem; text-align: center; color: var(--muted);
+        border: 1px dashed var(--line); border-radius: var(--radius);
+      }
+    </style>
+    <!--TODO -->
+  </template>
+
+  <template id="employee-item-template">
+    <style>
+      :host { display: block; }
+      .item { padding: .85rem 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); height: 100%; }
+      .name { margin: 0; font-size: 1rem; }
+      .projects { margin: .4rem 0 0; padding-left: 1.1rem; color: var(--muted); font-size: .9rem; }
+      .none { margin: .4rem 0 0; color: var(--muted); font-size: .9rem; }
+    </style>
+    <!--TODO -->
+  </template>
+
+  <template id="employee-list-template">
+    <style>
+      :host { display: block; }
+      .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .7rem; }
+    </style>
+    <!--TODO -->
+  </template>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

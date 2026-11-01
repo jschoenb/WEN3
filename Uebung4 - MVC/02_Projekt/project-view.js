@@ -1,50 +1,89 @@
-import {model} from "./model.js";
+import { cloneTemplate } from './template.js';
 
-class ProjectItem extends HTMLElement {
-    #project;
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-    }
+const numberFormat = new Intl.NumberFormat('de-AT');
 
-    set project(project) {
-        this.#project = project;
-        this.render();
-    }
+/** <project-item>: zeigt ein Projekt (item.data = { project, employees }). */
+export class ProjectItem extends HTMLElement {
+  #data = null;
+  #refs;
 
-    get project() {
-        return this.#project;
-    }
+  constructor() {
+    super();
 
-    render() {
-        //TODO rendern der Projekt-Informationen
-        //TODO click-Handler für das Projekt-Item zum Löschen des Projekts
-    }
+  }
+
+  connectedCallback() {
+    this.setAttribute('role', 'listitem');
+  }
+
+  set data(data) {
+    this.#data = data;
+    this.dataset.id = data.project.id;
+    this.#render();
+  }
+
+  get data() {
+    return this.#data;
+  }
+
+  // textContent / createElement statt innerHTML: Eingaben werden nie als HTML interpretiert
+  #render() {
+
+  }
 }
-customElements.define('project-item', ProjectItem);
+
+if (!customElements.get('project-item')) customElements.define('project-item', ProjectItem);
 
 
-class ProjectList extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-    }
+/** <project-list>: hört auf das Model (wird vom Controller injiziert). */
+export class ProjectList extends HTMLElement {
+  #model = null;
+  #listeners = null;
+  #refs;
 
-    connectedCallback() {
-        this.render();
-        // TODO Listen for events from the model
-    }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }).append(cloneTemplate('project-list-template'));
+  }
 
-    render() {
-        //TODO rendern der Projekt-Liste
-    }
+  set model(model) {
+    this.#unbind();
+    this.#model = model;
+    if (this.isConnected) this.#bind();
+  }
 
-    addProject(project) {
-        //TODO add a new project to the list
-    }
+  get model() {
+    return this.#model;
+  }
 
-    deleteProject(projectId) {
-        //TODO delete a project from the list
-    }
+  connectedCallback() {
+    if (this.#model && !this.#listeners) this.#bind();
+  }
+
+  // Listener wieder entfernen: sonst entstehen bei erneutem Einfügen doppelte Handler
+  disconnectedCallback() {
+    this.#unbind();
+  }
+
+  #bind() {
+
+  }
+
+  #unbind() {
+
+  }
+
+  #createItem(project) {
+
+  }
+
+  #find(id) {
+
+  }
+
+  #updateEmpty() {
+
+  }
 }
-customElements.define('project-list', ProjectList);
+
+if (!customElements.get('project-list')) customElements.define('project-list', ProjectList);

@@ -1,49 +1,75 @@
-import {model} from "./model.js";
+import { cloneTemplate } from './template.js';
 
-class EmployeeItem extends HTMLElement {
-    #employee   ;
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-    }
+/** <employee-item>: zeigt einen Mitarbeiter und seine Projekte (item.data = { employee, projects }). */
+export class EmployeeItem extends HTMLElement {
+  #data = null;
+  #refs;
 
-    set employee(employee) {
-        this.#employee = employee;
-        this.render();
-    }
+  constructor() {
+    super();
+  }
 
-    get employee() {
-        return this.#employee;
-    }
+  connectedCallback() {
+    this.setAttribute('role', 'listitem');
+  }
 
-    render() {
-        // Render employee information
-    }
+  set data(data) {
+    this.#data = data;
+    this.#render();
+  }
+
+  get data() {
+    return this.#data;
+  }
+
+  #render() {
+  }
 }
-customElements.define('employee-item', EmployeeItem);
+
+if (!customElements.get('employee-item')) customElements.define('employee-item', EmployeeItem);
 
 
-class EmployeeList extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({mode: 'open'});
-    }
+/**
+ * <employee-list>: Die Mitarbeiter sind wenige und ihre Projekte abgeleitet,
+ * daher wird bei jeder Projektänderung einfach komplett neu aufgebaut.
+ */
+export class EmployeeList extends HTMLElement {
+  #model = null;
+  #handler = () => this.#render();
+  #bound = false;
+  #list;
 
-    connectedCallback() {
-        this.render();
-        //TODO Listen for events from the model
+  constructor() {
+    super();
+  }
 
-    }
+  set model(model) {
+    this.#unbind();
+    this.#model = model;
+    if (this.isConnected) this.#bind();
+  }
 
-    render() {
-        //TODO render the employee list
-    }
+  get model() {
+    return this.#model;
+  }
 
-    update(project) {
-        this.render();
-    }
+  connectedCallback() {
+    if (this.#model && !this.#bound) this.#bind();
+  }
+
+  disconnectedCallback() {
+    this.#unbind();
+  }
+
+  #bind() {
+  }
+
+  #unbind() {
+  }
+
+  #render() {
+
+  }
 }
-customElements.define('employee-list', EmployeeList);
 
-
-
+if (!customElements.get('employee-list')) customElements.define('employee-list', EmployeeList);
