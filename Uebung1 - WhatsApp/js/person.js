@@ -38,4 +38,8 @@ export default class Person extends Contact {
     doPrintHeader(){
         //TODO
     }
+
+    toJSON(){
+        //TODO
+    }
 }
