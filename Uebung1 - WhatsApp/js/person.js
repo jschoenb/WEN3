@@ -40,6 +40,8 @@ export default class Person extends Contact {
     }
 
     toJSON(){
-        //TODO
+        let contact = super.toJSON();
+        contact.online = this.#online;
+        return contact;
     }
 }

@@ -15,9 +15,9 @@ export default class WhatsApp {
     }
 
     init(){
-        this.#loadFromJSON();
         this.#initUI();
         this.#addEventHandler();
+        this.#loadFromJSON();
     }
 
     insertMessage(text,senderId,receiverId){
@@ -42,8 +42,21 @@ export default class WhatsApp {
         document.querySelector(".chatlist").replaceChildren();
     }
 
-    #loadFromJSON(){
-        //TODO
+    async #loadFromJSON(){
+        let data = localStorage.getItem("whatsappData");
+        if(!data){
+            let response = await fetch("json/contacts.json");
+            data = await response.json();
+            localStorage.setItem("whatsappData",JSON.stringify(data));
+        } else {
+            data = JSON.parse(data);
+        }
+        for(let person of data.persons){
+            let p = new Person(person);
+            this.#contactList.set(p.id,p);
+            this.#addMessageToContact(p,person,false);
+        }
+        this.#printContactList();
     }
 
     #printContactList(){
