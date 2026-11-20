@@ -45,16 +45,23 @@ export default class WhatsApp {
     async #loadFromJSON(){
         let data = localStorage.getItem("whatsappData");
         if(!data){
+            //noch keine Daten im Storage, also laden wir die Daten aus der JSON-Datei
             let response = await fetch("json/contacts.json");
             data = await response.json();
             localStorage.setItem("whatsappData",JSON.stringify(data));
         } else {
             data = JSON.parse(data);
         }
-        for(let person of data.persons){
-            let p = new Person(person);
-            this.#contactList.set(p.id,p);
-            this.#addMessageToContact(p,person,false);
+        console.log(data);
+        for(let p of data.persons){
+            let person = new Person(p);
+            this.#contactList.set(person.id,person);
+            this.#addMessageToContact(person,p,false);
+        }
+        for(let g of data.groups){
+            let group = new Group(g);
+            this.#contactList.set(group.id,group);
+            this.#addMessageToContact(group,g,true);
         }
         this.#printContactList();
     }
