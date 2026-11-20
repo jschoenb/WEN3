@@ -15,4 +15,10 @@ export default class Group extends Contact {
     doPrintHeader(){
         //TODO
     }
+
+    toJSON() {
+        let contact = super.toJSON();
+        contact.members = this.#contacts.map(c => c.id);
+        return contact;
+    }
 }

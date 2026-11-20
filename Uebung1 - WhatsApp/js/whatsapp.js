@@ -15,8 +15,8 @@ export default class WhatsApp {
     }
 
     init(){
-        this.#loadFromJSON();
         this.#initUI();
+        this.#loadFromJSON();
         this.#addEventHandler();
     }
 

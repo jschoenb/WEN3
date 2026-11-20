@@ -47,5 +47,14 @@ export default class Contact{
     printMessages(userId,parent,contactList){
         //TODO
     }
+
+    toJSON() {
+        return {
+            id: this.#id,
+            name: this.#name,
+            img: this.#img,
+            messages: this.#messages
+        };
+    }
 }
 

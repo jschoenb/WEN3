@@ -32,4 +32,12 @@ export default class Message {
         //TODO
     }
 
+    toJSON() {
+        return {
+            text: this.#text,
+            time: this.#time,
+            senderId: this.#senderId
+        }
+    }
+
 }
