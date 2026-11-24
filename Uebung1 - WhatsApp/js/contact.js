@@ -36,7 +36,16 @@ export default class Contact{
     }
 
     printHeader(){
-        //TODO
+        let peer = document.querySelector(".chat__peer");
+        peer.replaceChildren();
+        let html = `
+            <img class="chat__avatar" src="${this.#img}" alt="${this.#name}"/>
+                <div>
+                <div class="chat__name">${this.#name}</div>
+                <div class="chat__status">${this.doPrintHeader()}</div>
+            </div>
+        `;
+        peer.insertAdjacentHTML("beforeend",html);
     }
 
     doPrintHeader(){
@@ -49,7 +58,7 @@ export default class Contact{
         let text = lastMsg == undefined? "":lastMsg.text;
         let time = lastMsg == undefined? "":lastMsg.time;
 
-        let contactString =`<li class="chatlist__item chatlist__item--active" data-contact-id="${this.#id}">
+        let contactString =`<li class="chatlist__item" data-contact-id="${this.#id}">
             <img class="chatlist__avatar" src="${this.#img}" alt="${this.#name}"/>
             <div class="chatlist__meta">
                 <div class="chatlist__name">${this.#name}</div>
@@ -63,7 +72,9 @@ export default class Contact{
 
 
     printMessages(userId, parent, contactList) {
-        //TODO
+        for(let msg of this.#messages){
+            msg.print(userId, parent, contactList);
+        }
     }
 
 

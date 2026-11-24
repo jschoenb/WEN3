@@ -27,7 +27,24 @@ export default class WhatsApp {
     //================ PRIVATE =================
     #addEventHandler(){
         document.querySelector(".chatlist").addEventListener("click",(e) => {
-            //TODO
+            let element = e.target.closest(".chatlist__item");
+            if(element){
+                //remove active class from all items and add it to the clicked
+                let lastActive = document.querySelector(".chatlist__item--active");
+                if(lastActive){
+                    lastActive.classList.remove("chatlist__item--active");
+                }
+                element.classList.add("chatlist__item--active");
+                element.classList.remove("chatlist__item--new");
+
+                //Nachrichten
+                document.querySelector(".messages").replaceChildren();
+                let id = element.dataset.contactId; //data-contact-id
+                this.#currentChatPartner = this.#contactList.get(Number(id));
+                this.#currentChatPartner.printMessages(this.#ownId,document.querySelector(".messages"),this.#contactList);
+                this.#currentChatPartner.printHeader();
+                document.querySelector(".composer__input").disabled=false;
+            }
         });
 
         document.querySelector(".composer__send").onclick=(ev)=>{
@@ -62,6 +79,15 @@ export default class WhatsApp {
             let group = new Group(g);
             this.#contactList.set(group.id,group);
             this.#addMessageToContact(group,g,true);
+            for(let memberId of g.members){
+                if(memberId !== this.#ownId){
+                    let member = this.#contactList.get(memberId);
+                    if(member){
+                        group.addContact(member);
+                        member.addGroup(group);
+                    }
+                }
+            }
         }
         this.#printContactList();
     }
