@@ -21,7 +21,27 @@ export default class WhatsApp {
     }
 
     insertMessage(text,senderId,receiverId){
-        //TODO
+        let currentDate = new Date();
+        let options = {
+            hour: "2-digit",
+            minute: "2-digit"
+        };
+        let time = currentDate.toLocaleTimeString("de-de",options);
+        //Creation of Message
+        let obj = {
+            text: text,
+            time: time,
+            senderId: senderId
+        }
+        let receiverContact = this.#contactList.get(Number(receiverId));
+        let msg = new Message(obj,receiverContact instanceof Group);
+        receiverContact.addMessage(msg);
+        if(this.#currentChatPartner?.id == receiverId){
+            msg.print(this.#ownId,document.querySelector(".messages"),this.#contactList);
+        } else {
+            let contactElement = document.querySelector(`.chatlist__item[data-contact-id="${receiverId}"]`);
+            contactElement.classList.add("chatlist__item--new");
+        }
     }
 
     //================ PRIVATE =================
@@ -48,7 +68,11 @@ export default class WhatsApp {
         });
 
         document.querySelector(".composer__send").onclick=(ev)=>{
-            //TODO
+            let input = document.querySelector(".composer__input");
+            if(input.value.trim() !== ""){
+                this.insertMessage(input.value.trim(),this.#ownId,this.#currentChatPartner.id);
+                input.value="";
+            }
         };
     }
 
