@@ -36,7 +36,15 @@ export default class Contact{
     }
 
     printHeader(){
-        //TODO
+        let peer = document.querySelector(".chat__peer");
+        peer.replaceChildren();
+        let div = `
+         <img class="chat__avatar" src="${this.#img}" alt="${this.#name}" />
+          <div>
+            <div class="chat__name">${this.#name}</div>
+            <div class="chat__status">${this.doPrintHeader()}</div>
+          </div>`
+        peer.insertAdjacentHTML("afterbegin",div);
     }
 
     doPrintHeader(){
@@ -63,7 +71,9 @@ export default class Contact{
 
 
     printMessages(userId,parent,contactList) {
-        //TODO
+        for(let m of this.#messages){
+            m.print(userId,parent,contactList);
+        }
     }
 
 

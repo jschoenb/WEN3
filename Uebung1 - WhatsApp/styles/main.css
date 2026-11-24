@@ -141,7 +141,7 @@ html[data-theme=dark] .chatlist__item:hover {
   opacity: 0.6;
 }
 
-.chatlist__item-new {
+.chatlist__item--new {
   background-color: #7fba8e;
 }
 
@@ -361,6 +361,10 @@ body.app {
 .chatlist::-webkit-scrollbar-thumb {
   background: var(--muted);
   border-radius: 999px;
+}
+
+.hannes {
+  background-color: #0b1220;
 }
 
 /*# sourceMappingURL=main.css.map */
